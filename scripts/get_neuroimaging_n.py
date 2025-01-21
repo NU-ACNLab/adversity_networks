@@ -25,10 +25,10 @@ t1_t3 = {'subid':[],
 
 for subdir in subdirs:
     sub = subdir.split('/')[9]
-    subid = sub.split('-')[1]
+    subid = str(sub.split('-')[1])
     sessions = glob.glob(subdir + "/ses-*")
     sessions = [i.split('/')[10] for i in sessions]
-    if 'ses-1' in sessions and 'ses-2' in sessions:
+    if 'ses-1' in sessions and 'ses-2' in sessions and subid != '10.21':
         for ses in sessions:
             sesid = ses.split('-')[1]
             if sesid == '1':
