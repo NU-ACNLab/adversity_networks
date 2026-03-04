@@ -52,7 +52,7 @@ for subdir in subdirs:
                 participant_label, '--longitudinal', '--nprocs=1 --omp-nthreads=1',
                 '-w ', workdir, '--skip_bids_validation',
                 '--fs-license-file /opt/freesurfer/license.txt',
-                '--use-syn-sdc', '--force-syn',
+                '--use-syn-sdc', '--force syn-sdc',
                 '--output-spaces MNI152NLin6Asym:res-2 anat',
                 '--skull-strip-template OASIS30ANTs']
             fmriprep_script = launchdir+sub+'_fmriprep_run.sh'
@@ -75,7 +75,7 @@ for subdir in subdirs:
                 '--nprocs=1 --omp-nthreads=1',
                 '-w ', workdir, '--skip_bids_validation',
                 '--fs-license-file /opt/freesurfer/license.txt',
-                '--use-syn-sdc', '--force-syn',
+                '--use-syn-sdc', '--force syn-sdc',
                 '--output-spaces MNI152NLin6Asym:res-2 anat',
                 '--skull-strip-template OASIS30ANTs']
             fmriprep_script = launchdir+sub+'_fmriprep_run.sh'
@@ -115,7 +115,7 @@ for subdir in subdirs:
                         participant_label, '--longitudinal', '--nprocs=1 --omp-nthreads=1',
                         '-w ', workdir, '--skip_bids_validation',
                         '--fs-license-file /opt/freesurfer/license.txt',
-                        '--use-syn-sdc', '--force-syn',
+                        '--use-syn-sdc', '--force syn-sdc',
                         '--output-spaces MNI152NLin6Asym:res-2 anat',
                         '--skull-strip-template OASIS30ANTs']
                     fmriprep_script = launchdir+sub+'_fmriprep_run.sh'
@@ -138,7 +138,7 @@ for subdir in subdirs:
                         '--nprocs=1 --omp-nthreads=1',
                         '-w ', workdir, '--skip_bids_validation',
                         '--fs-license-file /opt/freesurfer/license.txt',
-                        '--use-syn-sdc', '--force-syn',
+                        '--use-syn-sdc', '--force syn-sdc',
                         '--output-spaces MNI152NLin6Asym:res-2 anat',
                         '--skull-strip-template OASIS30ANTs']
                     fmriprep_script = launchdir+sub+'_fmriprep_run.sh'
