@@ -1,7 +1,7 @@
 ### This script generates submission scripts for fmriprep
 ###
 ### Ellyn Butler
-### January 13, 2025 - January 24, 2025
+### March 6, 2026
 
 # --output-spaces fsLR --cifti-output 91k (--project-goodvoxels)
 
@@ -12,9 +12,9 @@ import numpy as np
 import glob
 
 indir = '/projects/b1108/studies/rise/data/raw/neuroimaging/bids/'
-outdir = '/projects/b1108/studies/rise/data/processed/neuroimaging/fmriprep_23.2.0/'
-launchdir = '/projects/b1108/studies/rise/data/processed/neuroimaging/launch/fmriprep_23.2.0/'
-workdir = '/projects/b1108/studies/rise/data/processed/neuroimaging/work2/'
+outdir = '/projects/b1108/projects/adversity_networks/data/processed/neuroimaging/fmriprep_25.2.4/'
+launchdir = '/projects/b1108/projects/adversity_networks/data/processed/neuroimaging/launch/fmriprep_25.2.4/'
+workdir = '/projects/b1108/projects/adversity_networks/data/processed/neuroimaging/work/'
 
 subdirs = glob.glob(indir + "sub-*")
 
@@ -47,16 +47,17 @@ for subdir in subdirs:
                 '-B /tmp:/tmp', '-B /projects/b1108:/projects/b1108',
                 '-B /projects/b1108/software/freesurfer_license/license.txt:/opt/freesurfer/license.txt',
                 '-B /projects/b1108/templateflow:/home/fmriprep/.cache/templateflow',
-                '/projects/b1108/software/singularity_images/fmriprep_23.2.0.sif',
+                '/projects/b1108/software/singularity_images/fmriprep_25.2.4.sif',
                 indir, outdir, 'participant', '--participant-label',
-                participant_label, '--longitudinal', '--nprocs=1 --omp-nthreads=1',
+                participant_label, '--subject-anatomical-reference sessionwise', 
+                '--nprocs=1 --omp-nthreads=1',
                 '-w ', workdir, '--skip_bids_validation',
                 '--fs-license-file /opt/freesurfer/license.txt',
-                '--use-syn-sdc', '--force-syn',
+                '--use-syn-sdc', '--force syn-sdc',
                 '--output-spaces MNI152NLin6Asym:res-2 anat',
                 '--skull-strip-template OASIS30ANTs']
             fmriprep_script = launchdir+sub+'_fmriprep_run.sh'
-            os.system('cat /projects/b1108/studies/rise/scripts/process/sbatchinfo_general_extralong.sh > '+fmriprep_script) #_long
+            os.system('cat /projects/b1108/projects/adversity_networks/scripts/process/sbatchinfo_general_extralong.sh > '+fmriprep_script) #_long
             os.system('echo '+' '.join(cmd)+' >> '+fmriprep_script)
             os.system('chmod +x '+fmriprep_script)
             os.system('sbatch -o '+launchdir+sub+'.txt'+' '+fmriprep_script)
@@ -70,16 +71,16 @@ for subdir in subdirs:
                 '-B /tmp:/tmp', '-B /projects/b1108:/projects/b1108',
                 '-B /projects/b1108/software/freesurfer_license/license.txt:/opt/freesurfer/license.txt',
                 '-B /projects/b1108/templateflow:/home/fmriprep/.cache/templateflow',
-                '/projects/b1108/software/singularity_images/fmriprep_23.2.0.sif',
+                '/projects/b1108/software/singularity_images/fmriprep_25.2.4.sif',
                 indir, outdir, 'participant', '--participant-label', participant_label,
                 '--nprocs=1 --omp-nthreads=1',
                 '-w ', workdir, '--skip_bids_validation',
                 '--fs-license-file /opt/freesurfer/license.txt',
-                '--use-syn-sdc', '--force-syn',
+                '--use-syn-sdc', '--force syn-sdc',
                 '--output-spaces MNI152NLin6Asym:res-2 anat',
                 '--skull-strip-template OASIS30ANTs']
             fmriprep_script = launchdir+sub+'_fmriprep_run.sh'
-            os.system('cat /projects/b1108/studies/rise/scripts/process/sbatchinfo_general_extralong.sh > '+fmriprep_script)
+            os.system('cat /projects/b1108/projects/adversity_networks/scripts/process/sbatchinfo_general_extralong.sh > '+fmriprep_script)
             os.system('echo '+' '.join(cmd)+' >> '+fmriprep_script)
             os.system('chmod +x '+fmriprep_script)
             os.system('sbatch -o '+launchdir+sub+'.txt'+' '+fmriprep_script)
@@ -110,16 +111,17 @@ for subdir in subdirs:
                         '-B /tmp:/tmp', '-B /projects/b1108:/projects/b1108',
                         '-B /projects/b1108/software/freesurfer_license/license.txt:/opt/freesurfer/license.txt',
                         '-B /projects/b1108/templateflow:/home/fmriprep/.cache/templateflow',
-                        '/projects/b1108/software/singularity_images/fmriprep_23.2.0.sif',
+                        '/projects/b1108/software/singularity_images/fmriprep_25.2.4.sif',
                         indir, outdir, 'participant', '--participant-label',
-                        participant_label, '--longitudinal', '--nprocs=1 --omp-nthreads=1',
+                        participant_label, '--subject-anatomical-reference sessionwise', 
+                        '--nprocs=1 --omp-nthreads=1',
                         '-w ', workdir, '--skip_bids_validation',
                         '--fs-license-file /opt/freesurfer/license.txt',
-                        '--use-syn-sdc', '--force-syn',
+                        '--use-syn-sdc', '--force syn-sdc',
                         '--output-spaces MNI152NLin6Asym:res-2 anat',
                         '--skull-strip-template OASIS30ANTs']
                     fmriprep_script = launchdir+sub+'_fmriprep_run.sh'
-                    os.system('cat /projects/b1108/studies/rise/scripts/process/sbatchinfo_general_extralong30.sh > '+fmriprep_script) #_long
+                    os.system('cat /projects/b1108/projects/adversity_networks/scripts/process/sbatchinfo_general_extralong30.sh > '+fmriprep_script) #_long
                     os.system('echo '+' '.join(cmd)+' >> '+fmriprep_script)
                     os.system('chmod +x '+fmriprep_script)
                     os.system('sbatch -o '+launchdir+sub+'.txt'+' '+fmriprep_script)
@@ -133,16 +135,16 @@ for subdir in subdirs:
                         '-B /tmp:/tmp', '-B /projects/b1108:/projects/b1108',
                         '-B /projects/b1108/software/freesurfer_license/license.txt:/opt/freesurfer/license.txt',
                         '-B /projects/b1108/templateflow:/home/fmriprep/.cache/templateflow',
-                        '/projects/b1108/software/singularity_images/fmriprep_23.2.0.sif',
+                        '/projects/b1108/software/singularity_images/fmriprep_25.2.4.sif',
                         indir, outdir, 'participant', '--participant-label', participant_label,
                         '--nprocs=1 --omp-nthreads=1',
                         '-w ', workdir, '--skip_bids_validation',
                         '--fs-license-file /opt/freesurfer/license.txt',
-                        '--use-syn-sdc', '--force-syn',
+                        '--use-syn-sdc', '--force syn-sdc',
                         '--output-spaces MNI152NLin6Asym:res-2 anat',
                         '--skull-strip-template OASIS30ANTs']
                     fmriprep_script = launchdir+sub+'_fmriprep_run.sh'
-                    os.system('cat /projects/b1108/studies/rise/scripts/process/sbatchinfo_general_extralong30.sh > '+fmriprep_script)
+                    os.system('cat /projects/b1108/projects/adversity_networks/scripts/process/sbatchinfo_general_extralong30.sh > '+fmriprep_script)
                     os.system('echo '+' '.join(cmd)+' >> '+fmriprep_script)
                     os.system('chmod +x '+fmriprep_script)
                     os.system('sbatch -o '+launchdir+sub+'.txt'+' '+fmriprep_script)
