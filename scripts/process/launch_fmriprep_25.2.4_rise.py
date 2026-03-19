@@ -55,7 +55,8 @@ for subdir in subdirs:
                 '--fs-license-file /opt/freesurfer/license.txt',
                 '--use-syn-sdc', '--force syn-sdc',
                 '--output-spaces MNI152NLin6Asym:res-2 anat',
-                '--skull-strip-template OASIS30ANTs']
+                '--skull-strip-template OASIS30ANTs',
+                '--bids-filter-file /projects/b1108/projects/adversity_networks/scripts/process/filter.json']
             fmriprep_script = launchdir+sub+'_fmriprep_run.sh'
             os.system('cat /projects/b1108/projects/adversity_networks/scripts/process/sbatchinfo_general_extralong.sh > '+fmriprep_script) #_long
             os.system('echo '+' '.join(cmd)+' >> '+fmriprep_script)
@@ -78,7 +79,8 @@ for subdir in subdirs:
                 '--fs-license-file /opt/freesurfer/license.txt',
                 '--use-syn-sdc', '--force syn-sdc',
                 '--output-spaces MNI152NLin6Asym:res-2 anat',
-                '--skull-strip-template OASIS30ANTs']
+                '--skull-strip-template OASIS30ANTs',
+                '--bids-filter-file /projects/b1108/projects/adversity_networks/scripts/process/filter.json']
             fmriprep_script = launchdir+sub+'_fmriprep_run.sh'
             os.system('cat /projects/b1108/projects/adversity_networks/scripts/process/sbatchinfo_general_extralong.sh > '+fmriprep_script)
             os.system('echo '+' '.join(cmd)+' >> '+fmriprep_script)
@@ -119,7 +121,8 @@ for subdir in subdirs:
                         '--fs-license-file /opt/freesurfer/license.txt',
                         '--use-syn-sdc', '--force syn-sdc',
                         '--output-spaces MNI152NLin6Asym:res-2 anat',
-                        '--skull-strip-template OASIS30ANTs']
+                        '--skull-strip-template OASIS30ANTs',
+                        '--bids-filter-file /projects/b1108/projects/adversity_networks/scripts/process/filter.json']
                     fmriprep_script = launchdir+sub+'_fmriprep_run.sh'
                     os.system('cat /projects/b1108/projects/adversity_networks/scripts/process/sbatchinfo_general_extralong30.sh > '+fmriprep_script) #_long
                     os.system('echo '+' '.join(cmd)+' >> '+fmriprep_script)
@@ -142,7 +145,8 @@ for subdir in subdirs:
                         '--fs-license-file /opt/freesurfer/license.txt',
                         '--use-syn-sdc', '--force syn-sdc',
                         '--output-spaces MNI152NLin6Asym:res-2 anat',
-                        '--skull-strip-template OASIS30ANTs']
+                        '--skull-strip-template OASIS30ANTs',
+                        '--bids-filter-file /projects/b1108/projects/adversity_networks/scripts/process/filter.json']
                     fmriprep_script = launchdir+sub+'_fmriprep_run.sh'
                     os.system('cat /projects/b1108/projects/adversity_networks/scripts/process/sbatchinfo_general_extralong30.sh > '+fmriprep_script)
                     os.system('echo '+' '.join(cmd)+' >> '+fmriprep_script)

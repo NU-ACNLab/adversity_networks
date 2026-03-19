@@ -89,10 +89,13 @@ for subdir in subdirs:
     else:
         print(sub + ' processing does not exist')
 
-# July 6, 2025 - sanity check
+# March 19, 2026 - sanity check
+# sub-100094 processing does not exist - 
 # sub-10.21 processing does not exist - good, trial sub
 # sub-50133 processing does not exist - good, only has a T1w image
+# sub-100223 processing does not exist - no functional data in BIDS ses-1... so why no ses-2 outputs? fmriprep errors out in this case...
 # sub-1.9.2 processing does not exist - good, trial sub
+# sub-100286 processing does not exist - structural scan missing from ses-2, looks like this messed up all of fmriprep
 # sub-100333 processing does not exist - good, scan was lost due to scanner upgrade
-# sub-100337 processing does not exist - good, failed freesurfer at fmriprep stage
-# sub-50001 processing does not exist - investigate... ciftis hadn't been created... exists now
+# sub-100213 processing does not exist - missing data but has dir from ses-3, seems to mess up the rest... asked Akash about deleting ses-3 dir
+# sub-50046 processing does not exist - head too big for scanner at ses-2
