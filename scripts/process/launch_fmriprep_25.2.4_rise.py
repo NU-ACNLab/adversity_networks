@@ -156,7 +156,11 @@ for subdir in subdirs:
     with open(txtlog) as myfile:
         if 'ERROR' in myfile.read():
             print(sub)
-            i=i+1 #June 24, 2025: No errors!
+            i=i+1 
+    #sub-50318: No errors in html
+    #sub-50106: No errors in html
+    #sub-50306: No errors in html
+    #sub-50139: No errors in html
 
 for subdir in subdirs:
     sub = subdir.split('/')[9]

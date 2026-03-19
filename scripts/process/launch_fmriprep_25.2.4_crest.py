@@ -158,6 +158,13 @@ for subdir in subdirs:
         if 'ERROR' in myfile.read():
             print(sub)
             i=i+1 
+    #sub-100246: No errors in html
+    #sub-100355: No errors in html
+    #sub-100286: No outputs
+    #sub-100033: No errors in html
+    #sub-100348: No errors in html
+    #sub-100345: No errors in html
+    #sub-100372: No errors in html
 
 # Check if the subject has already finished processing (couldn't have if they don't have an html)
 for subdir in subdirs:
