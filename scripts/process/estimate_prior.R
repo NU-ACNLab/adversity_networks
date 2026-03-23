@@ -50,7 +50,7 @@ for (j in 1:nrow(temp_subjs)) {
 }
 
 print('Estimate prior.') 
-temp <- estimate_prior(
+prior <- estimate_prior(
   paths,
   template = GPARC, 
   hpf = 0, 
@@ -63,7 +63,7 @@ temp <- estimate_prior(
   verbose = TRUE#, usePar=4, wb_path=wb_path
 ) 
 
-saveRDS(temp, paste0(outdir, 'prior.rds'))
+saveRDS(prior, paste0(outdir, 'prior.rds'))
 
 
 #plot(temp, idx=1:17, fname=paste0('/Users/flutist4129/Documents/Northwestern/projects/adversity_networks/plots/temp_maxpostproc_sub-ses2_ses-rand_', 1:17))
