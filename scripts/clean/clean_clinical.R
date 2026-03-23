@@ -558,4 +558,4 @@ crest_df <- merge(crest_df, crest_les_df, all = TRUE)
 ####### Finalize and export
 
 df <- rbind(rise_df, crest_df)
-write.csv(df_full, paste0('~/Documents/Northwestern/projects/adversity_networks/data/processed/clinical/clinical_', format(Sys.Date(), "%Y-%m-%d"), '.csv'), row.names = FALSE)
+write.csv(df, paste0('~/Documents/Northwestern/projects/adversity_networks/data/processed/clinical/clinical_', format(Sys.Date(), "%Y-%m-%d"), '.csv'), row.names = FALSE)
