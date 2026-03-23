@@ -38,12 +38,12 @@ print('Resample GPARC')
 
 GPARC <- resample_cifti(GPARC, resamp_res = 10000)
 
-print('Get the paths to the maximally postprocessed data.')
+print('Get the paths to the postprocessed data.')
 Sys.setenv('R_MAX_VSIZE'=32000000000)
 paths <- c()
-sesid <- 1
 for (j in 1:nrow(temp_subjs)) { 
   subid <- temp_subjs[j, 'subid']
+  sesid <- temp_subjs[j, 'sesid']
   path <- c(system(paste0('find ', indir, 'surf/sub-', subid, '/ses-', sesid, '/func/ ', 
         '-name "*_task-all_space-fsLR_desc-postproc_bold.dscalar.nii"'), intern=TRUE))
   paths <- c(paths, path)
