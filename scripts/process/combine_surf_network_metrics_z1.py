@@ -1,0 +1,18 @@
+### This script combines the individual session csvs 
+### into one master csv
+###
+### Ellyn Butler
+### March 24, 2026
+
+import glob
+import csv
+import pandas as pd
+import os
+from datetime import datetime
+
+basedir = '/projects/b1108/projects/adversity_networks/data/processed/neuroimaging'
+
+files = glob.glob(basedir+'/surfnet/sub*/ses*/*_surf_network_metrics_z1.csv')
+df = pd.concat((pd.read_csv(f, header = 0) for f in files))
+
+df.to_csv(basedir+'/tabulated/surf_network_metrics_z1_'+datetime.today().strftime('%Y-%m-%d')+'.csv', index=False)
