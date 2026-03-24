@@ -59,12 +59,12 @@ if (file.exists(paste0(outdir, 'sub-', subid, '/ses-', sesid, '/networks_img.rds
 
 ###### Identify areas of engagement and deviation
 print('Identify areas of engagement')
-if (file.exists(paste0(outdir, 'sub-', subid, '/ses-', sesid, '/network_membership_z1.rds'))) {
-        network_membership <- readRDS(paste0(outdir, 'sub-', subid, '/ses-', sesid, '/network_membership_z1.rds'))
+if (file.exists(paste0(outdir, 'sub-', subid, '/ses-', sesid, '/network_membership.rds'))) {
+        network_membership <- readRDS(paste0(outdir, 'sub-', subid, '/ses-', sesid, '/network_membership.rds'))
 } else {
         network_membership <- engagements(networks_img, z = 1, verbose = TRUE, alpha = 0.01, method_p = 'fdr', type = '>')
 
-        saveRDS(network_membership, paste0(outdir, 'sub-', subid, '/ses-', sesid, '/network_membership_z1.rds'))
+        saveRDS(network_membership, paste0(outdir, 'sub-', subid, '/ses-', sesid, '/network_membership.rds'))
 }
 
 cii <- move_from_mwall(cii, NA) 
@@ -273,4 +273,4 @@ for (net1 in 1:17) {
 print('Output')
 
 write.csv(df, paste0(outdir, 'sub-', subid, '/ses-', sesid, '/sub-', subid, '_ses-', 
-                     sesid, '_surf_network_metrics_z1.csv'), row.names = FALSE)
+                     sesid, '_surf_network_metrics.csv'), row.names = FALSE)
