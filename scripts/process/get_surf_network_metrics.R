@@ -51,7 +51,7 @@ print('Single subject map estimation')
 if (file.exists(paste0(outdir, 'sub-', subid, '/ses-', sesid, '/networks_img.rds'))) {
         networks_img <- readRDS(paste0(outdir, 'sub-', subid, '/ses-', sesid, '/networks_img.rds'))
 } else {
-        networks_img <- BrainMap(cii, prior, tvar_method = 'unbiased', hpf = 0,
+        networks_img <- fit_BBM(cii, prior, var_method = 'unbiased', hpf = 0,
                         scale = 'local', scale_sm_FWHM = 2, GSR = FALSE) 
 
         saveRDS(networks_img, paste0(outdir, 'sub-', subid, '/ses-', sesid, '/networks_img.rds'))
@@ -62,7 +62,7 @@ print('Identify areas of engagement')
 if (file.exists(paste0(outdir, 'sub-', subid, '/ses-', sesid, '/network_membership.rds'))) {
         network_membership <- readRDS(paste0(outdir, 'sub-', subid, '/ses-', sesid, '/network_membership.rds'))
 } else {
-        network_membership <- engagements(networks_img, z = 1, verbose = TRUE, alpha = 0.01, method_p = 'fdr', type = '>')
+        network_membership <- id_engagements(networks_img, z = 1, verbose = TRUE, alpha = 0.01, method_p = 'fdr', type = '>')
 
         saveRDS(network_membership, paste0(outdir, 'sub-', subid, '/ses-', sesid, '/network_membership.rds'))
 }
