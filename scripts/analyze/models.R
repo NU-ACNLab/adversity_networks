@@ -1,7 +1,7 @@
 ### This code focuses on session 2 for the analyses
 ###
 ### Ellyn Butler
-### March 26, 2026
+### March 26, 2026 - March 31, 2026
 
 set.seed(2000)
 
@@ -16,26 +16,29 @@ library(sjlabelled)
 
 #library(lmerTest) #confint
 
-d <- read.csv('~/Documents/Northwestern/projects/violence_sex_development/data/combined_data_2024-10-07.csv')
-dall <- d
-d <- d[!is.na(d$exp_b_pos) & !is.na(d$FC_b_pos) & !is.na(d$depression) & !is.na(d$num_pastyear), ]
-d2 <- d[d$sesid == 2, ]
+df <- read.csv('~/Documents/Northwestern/projects/adversity_networks/data/processed/combined/combined_data_2026-03-31.csv')
 
-dim(d2) # N = 220
-range(d2$age_mri) # 14 - 18
-mean(d2$ever) # 55.45%
-mean(d2$num_pastyear > 0) # 45.45%
-mean(d2[d2$female == 1, 'num_pastyear']) # 1.16
-mean(d2[d2$female == 0, 'num_pastyear']) # 2.95
-rate_mod <- lm(num_pastyear ~ female, data = d2)
-t.test(num_pastyear ~ female, data = d2)
+dim(df) # N = 246
+range(df$age_mri) # 14.23562 - 19.41370
+mean(df$threatening_2 > 0) # 47.56%
+mean(df[df$Sex == 'Female', 'threatening_2']) # 1.79
+mean(df[df$Sex == 'Male', 'threatening_2']) # 0.90
+rate_mod <- lm(threatening_2 ~ Sex, data = df)
+t.test(threatening_2 ~ Sex, data = df) #t = 2.8653, df = 225.5, p-value = 0.00456
 summary(rate_mod)
 
-################### Plot
+mean(df$unstable_2 > 0) # 29.67%
+mean(df[df$Sex == 'Female', 'unstable_2']) # 1.19
+mean(df[df$Sex == 'Male', 'unstable_2']) # 1.38
+rate_mod <- lm(unstable_2 ~ Sex, data = df)
+t.test(unstable_2 ~ Sex, data = df) #t = -0.30127, df = 144.13, p-value = 0.7636
+summary(rate_mod)
+
+################### Plot... later
 # Violence rates
 viol_df <- read.csv('~/Documents/Northwestern/studies/mwmh/data/processed/violence/violence_2022-10-06.csv')
 
-viol_df <- merge(viol_df, d2)
+viol_df <- merge(viol_df, df)
 nf <- nrow(viol_df[viol_df$female == 1, ])
 nm <- nrow(viol_df[viol_df$female == 0, ])
 
@@ -83,7 +86,7 @@ dev.off()
 viol_df$Sex <- recode(viol_df$female, `1`='Female', `0`='Male')
 viol_df$Sex <- ordered(viol_df$Sex, c('Male', 'Female'))
 
-viol_plot <- ggplot(viol_df, aes(num_pastyear, depression, color=Sex)) +
+viol_plot <- ggplot(viol_df, aes(threatening_2, depression, color=Sex)) +
       geom_smooth(method = 'lm') +
       geom_point(alpha = 0.3, ) + theme_linedraw() +
       ylab('Depression') +
@@ -120,47 +123,47 @@ dev.off()
 d1 <- dall[dall$sesid == 1, ]
 d1 <- d1[, c('subid', 'BMIperc', 'PubCat')]
 names(d1) <- c('subid', 'BMIperc_1', 'PubCat_1')
-d2 <- merge(d2, d1)
-vars <- c('depression', 'num_pastyear', 'exp_b_pos', 'FC_b_pos', 'BMIperc_1', 'PubCat_1', 'age_mri', 'IPR')
-d2[, vars] <- scale(d2[, vars])
+df <- merge(df, d1)
+vars <- c('depression',  'threatening_2', 'exp_b_pos', 'FC_b_pos', 'BMIperc_1', 'PubCat_1', 'age_mri', 'IPR')
+df[, vars] <- scale(df[, vars])
 
-d2$BMIperc_2 <- d2$BMIperc
-d2$PubCat_2 <- d2$PubCat
-d2$BMIperc <- d2$BMIperc_1
-d2$PubCat <- d2$PubCat_1
+df$BMIperc_2 <- df$BMIperc
+df$PubCat_2 <- df$PubCat
+df$BMIperc <- df$BMIperc_1
+df$PubCat <- df$PubCat_1
 
 # use these for poster
-boo1 <- lm(depression ~ num_pastyear*female, d=d2) #sig: female, and femaleXnum_pastyear ... R^2 same across scaled and unscaled, corrs all 1
-cor.test(d2[d2$female == 0, 'depression'], d2[d2$female == 0, 'num_pastyear'])
-cor.test(d2[d2$female == 1, 'depression'], d2[d2$female == 1, 'num_pastyear'])
-boo2 <- lm(exp_b_pos ~ num_pastyear*female, d=d2) #sig: none
-boo2.2 <- lm(FC_b_pos ~ num_pastyear*female, d=d2) #sig: female
-boo3 <- lm(depression ~ exp_b_pos*female, d=d2) #sig: exp_b_pos, female
-cor.test(d2[d2$female == 0, 'depression'], d2[d2$female == 0, 'exp_b_pos'])
-cor.test(d2[d2$female == 1, 'depression'], d2[d2$female == 1, 'exp_b_pos'])
-boo3.2 <- lm(depression ~ FC_b_pos*female, d=d2) #sig: FC_b_pos, female, FC_b_posXfemale
-cor.test(d2[d2$female == 0, 'depression'], d2[d2$female == 0, 'FC_b_pos'])
-cor.test(d2[d2$female == 1, 'depression'], d2[d2$female == 1, 'FC_b_pos'])
+boo1 <- lm(depression ~ threatening_2*female, d=df) #sig: female, and femaleXthreatening_2 ... R^2 same across scaled and unscaled, corrs all 1
+cor.test(df[df$female == 0, 'depression'], df[df$female == 0,  'threatening_2'])
+cor.test(df[df$female == 1, 'depression'], df[df$female == 1,  'threatening_2'])
+boo2 <- lm(exp_b_pos ~ threatening_2*female, d=df) #sig: none
+boo2.2 <- lm(FC_b_pos ~ threatening_2*female, d=df) #sig: female
+boo3 <- lm(depression ~ exp_b_pos*female, d=df) #sig: exp_b_pos, female
+cor.test(df[df$female == 0, 'depression'], df[df$female == 0, 'exp_b_pos'])
+cor.test(df[df$female == 1, 'depression'], df[df$female == 1, 'exp_b_pos'])
+boo3.2 <- lm(depression ~ FC_b_pos*female, d=df) #sig: FC_b_pos, female, FC_b_posXfemale
+cor.test(df[df$female == 0, 'depression'], df[df$female == 0, 'FC_b_pos'])
+cor.test(df[df$female == 1, 'depression'], df[df$female == 1, 'FC_b_pos'])
 tab_model(boo1, boo2, boo2.2, show.ci = FALSE)
 tab_model(boo3, boo3.2, show.ci = FALSE)
 
 # sensitivity
-goo1 <- lm(depression ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + num_pastyear*female, d=d2) #sig: white, hispanic, female, and femaleXnum_pastyear
-goo2 <- lm(exp_b_pos ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + num_pastyear*female, d=d2) #sig: black
-goo2.2 <- lm(FC_b_pos ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + num_pastyear*female, d=d2) #sig: black, female
-goo3 <- lm(depression ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + exp_b_pos*female, d=d2) #sig: hispanic
-goo3.2 <- lm(depression ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + FC_b_pos*female, d=d2) #sig: hispanic, female
+goo1 <- lm(depression ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + threatening_2*female, d=df) #sig: white, hispanic, female, and femaleXthreatening_2
+goo2 <- lm(exp_b_pos ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + threatening_2*female, d=df) #sig: black
+goo2.2 <- lm(FC_b_pos ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + threatening_2*female, d=df) #sig: black, female
+goo3 <- lm(depression ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + exp_b_pos*female, d=df) #sig: hispanic
+goo3.2 <- lm(depression ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + FC_b_pos*female, d=df) #sig: hispanic, female
 
 ##### Control for T1
 
 # Impute brain values for subjects that have T2 but not T1 data
-d1b <- dall[dall$sesid == 1 & dall$subid %in% d2$subid, ]
+d1b <- dall[dall$sesid == 1 & dall$subid %in% df$subid, ]
 d1b <- d1b[, !(names(d1b) %in% c('sesid', 'otherrace'))]
-d2b <- d2
-d2b <- d2b[, !(names(d2b) %in% c('sesid', 'otherrace'))]
+dfb <- df
+dfb <- dfb[, !(names(dfb) %in% c('sesid', 'otherrace'))]
 same <- c('subid', 'black', 'white', 'hispanic', 'female', 'IPR')
 names(d1b)[!(names(d1b) %in% same)] <- paste0(names(d1b)[!(names(d1b) %in% same)], '_1')
-names(d2b)[!(names(d2b) %in% same)] <- paste0(names(d2b)[!(names(d2b) %in% same)], '_2')
+names(dfb)[!(names(dfb) %in% same)] <- paste0(names(dfb)[!(names(dfb) %in% same)], '_2')
 
 
 # How many missing values for each variable?
@@ -168,7 +171,7 @@ names(d2b)[!(names(d2b) %in% same)] <- paste0(names(d2b)[!(names(d2b) %in% same)
 # times they had been exposed to violence in the past year; and 14 did not 
 # have usable resting state data (look more into this)
 sum(is.na(d1b$age_mri_1)) #3
-sum(is.na(d1b$num_pastyear_1)) #5
+sum(is.na(d1b$threatening_2_1)) #5
 sum(is.na(d1b$depression_1)) #0
 sum(is.na(d1b$exp_b_pos_1)) #17
 sum(is.na(d1b$FC_b_pos_1)) #17
@@ -190,7 +193,7 @@ d1b[is.na(d1b$exp_b_pos_1) & !is.na(d1b$age_mri_1), 'subid']
 
 # Assume age_mri_1 would have been two years before age_mri_2
 subids <- d1b[is.na(d1b$age_mri_1), 'subid']
-d1b[is.na(d1b$age_mri_1), 'age_mri_1'] <- d2b[d2b$subid %in% subids, 'age_mri_2'] - 2
+d1b[is.na(d1b$age_mri_1), 'age_mri_1'] <- dfb[dfb$subid %in% subids, 'age_mri_2'] - 2
 
 # Predict exp_b_pos_1
 t.test(exp_b_pos_1 ~ black, data = d1b) #sig... lower p-val than white
@@ -221,17 +224,17 @@ fc_mod <- lm(FC_b_pos_1 ~ female, data = d1b)
 d1b[is.na(d1b$FC_b_pos_1), 'FC_b_pos_1'] <- predict(fc_mod, d1b[is.na(d1b$FC_b_pos_1), ])
 
 d1b <- d1b[, !(names(d1b) %in% c('IPR', 'black', 'white', 'hispanic', 'female'))]
-df <- merge(d1b, d2b) #keep the subjects that have complete session 2 data
+df <- merge(d1b, dfb) #keep the subjects that have complete session 2 data
 
 # Controlling for T1 data
-vars <- c('depression_2', 'num_pastyear_2', 'age_mri_2', 'depression_1', 'BMIperc_2', 'PubCat_2', 'exp_b_pos_1', 'FC_b_pos_1')
+vars <- c('depression_2', 'threatening_2', 'age_mri_2', 'depression_1', 'BMIperc_2', 'PubCat_2', 'exp_b_pos_1', 'FC_b_pos_1')
 df[, vars] <- scale(df[, vars])
-df$num_pastyear <- df$num_pastyear_2
+df$threatening_2 <- df$threatening_2_2
 df$exp_b_pos <- df$exp_b_pos_2
 df$FC_b_pos <- df$FC_b_pos_2
-foo1 <- lm(depression_2 ~ num_pastyear*female + depression_1, d=df) #sig: num_pastyear_2, female, depression_1, num_pastyear_2:female
-foo2 <- lm(exp_b_pos ~ num_pastyear*female + exp_b_pos_1, d=df) #sig: exp_b_pos_1
-foo2.2 <- lm(FC_b_pos ~ num_pastyear*female + FC_b_pos_1, d=df) #sig: female, FC_b_pos_1
+foo1 <- lm(depression_2 ~ threatening_2*female + depression_1, d=df) #sig: threatening_2_2, female, depression_1, threatening_2_2:female
+foo2 <- lm(exp_b_pos ~ threatening_2*female + exp_b_pos_1, d=df) #sig: exp_b_pos_1
+foo2.2 <- lm(FC_b_pos ~ threatening_2*female + FC_b_pos_1, d=df) #sig: female, FC_b_pos_1
 foo3 <- lm(depression_2 ~ exp_b_pos*female + depression_1, d=df) #sig: exp_b_pos_2 (interesting!), depression_1
 foo3.2 <- lm(depression_2 ~ FC_b_pos*female + depression_1, d=df) #sig: FC_b_pos_2 (interesting!), female, depression_1, FC_b_pos_2:female (interesting!)
 
@@ -239,9 +242,9 @@ foo3.2 <- lm(depression_2 ~ FC_b_pos*female + depression_1, d=df) #sig: FC_b_pos
 df$age_mri <- df$age_mri_2
 df$BMIperc <- df$BMIperc_1
 df$PubCat <- df$PubCat_1
-noo1 <- lm(depression_2 ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + num_pastyear*female + depression_1, d=df) #sig: num_pastyear_2, female, num_pastyear_2:female, white, hispanic, BMIperc, IPR 
-noo2 <- lm(exp_b_pos ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + num_pastyear*female + exp_b_pos_1, d=df) #sig: 
-noo2.2 <- lm(FC_b_pos ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + num_pastyear*female + FC_b_pos_1, d=df) #sig: 
+noo1 <- lm(depression_2 ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + threatening_2*female + depression_1, d=df) #sig: threatening_2_2, female, threatening_2_2:female, white, hispanic, BMIperc, IPR 
+noo2 <- lm(exp_b_pos ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + threatening_2*female + exp_b_pos_1, d=df) #sig: 
+noo2.2 <- lm(FC_b_pos ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + threatening_2*female + FC_b_pos_1, d=df) #sig: 
 noo3 <- lm(depression_2 ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + exp_b_pos*female + depression_1, d=df) #sig: 
 noo3.2 <- lm(depression_2 ~ age_mri + black + white + hispanic + BMIperc + PubCat + IPR + FC_b_pos*female + depression_1, d=df) #sig: 
 
