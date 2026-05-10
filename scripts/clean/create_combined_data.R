@@ -1,7 +1,7 @@
 ### Merge all data types for final sample
 ###
 ### Ellyn Butler
-### March 26, 2026 - March 31, 2026
+### March 26, 2026 - May 10, 2026
 
 library(dplyr)
 
@@ -9,7 +9,7 @@ library(dplyr)
 basedir <- '/projects/b1108/projects/adversity_networks/data/processed/'
 demo_df <- read.csv(paste0(basedir, 'demographic/demographic_2026-03-31.csv'))
 ses_df <- read.csv('/projects/b1108/projects/personalized_versus_group/data/processed/demographic/ses_2025-11-02.csv')
-clin_df <- read.csv(paste0(basedir, 'clinical/clinical_2026-03-23.csv'))
+clin_df <- read.csv(paste0(basedir, 'clinical/clinical_2026-05-10.csv'))
 net_df <- read.csv(paste0(basedir, 'neuroimaging/tabulated/surf_network_metrics_2026-03-26.csv'))
 subjs_df <- read.csv(paste0(basedir, 'neuroimaging/tabulated/prior_subjects_2026-03-23.csv'))
 

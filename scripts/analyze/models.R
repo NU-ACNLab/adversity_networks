@@ -17,7 +17,7 @@ library(mlr)
 
 #library(lmerTest) #confint
 
-df <- read.csv('~/Documents/Northwestern/projects/adversity_networks/data/processed/combined/combined_data_2026-03-31.csv')
+df <- read.csv('~/Documents/Northwestern/projects/adversity_networks/data/processed/combined/combined_data_2026-05-10.csv')
 
 dim(df) # N = 246
 range(df$age_mri) # 14.23562 - 19.41370
