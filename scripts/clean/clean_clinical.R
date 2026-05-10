@@ -2,7 +2,7 @@
 ### make it usable for analyses
 ###
 ### Ellyn Butler
-### March 20, 2026 
+### March 20, 2026 - May 10, 2026
 
 # Load libraries
 library(tidyverse)
@@ -19,27 +19,30 @@ rise_bdi_df <- read.csv(paste0(basedir, 'ProjectRISE-17BDI_DATA_2026-03-20_1043.
 rise_les_t2_df <- read.csv(paste0(basedir, 'ProjectRISE-102LEST2_DATA_2026-03-20_1049.csv'))
 rise_les_t3_df <- read.csv(paste0(basedir, 'ProjectRISE-103LEST3_DATA_2026-03-20_1049.csv'))
 
-rise_les_df <- merge(rise_les_t2_df[, c('rise_id', 'les_t2_44', 'les_t2_44_freq',
+rise_les_df <- merge(rise_les_t2_df[, c('rise_id', 'les_t2_start_date', 'les_t2_44', 'les_t2_44_freq',
                      'les_t2_137', 'les_t2_137_freq', 'les_t2_138', 'les_t2_138_freq',
                      'les_t2_141', 'les_t2_141_freq', 'les_t2_17', 'les_t2_17_freq',
                      'les_t2_114', 'les_t2_114_freq', 'les_t2_115', 'les_t2_115_freq',
-                     'les_t2_120', 'les_t2_120_freq',
-                     'les_t2_45', 'les_t2_45_freq', 'les_t2_145', 'les_t2_145_freq',
+                     'les_t2_120', 'les_t2_120_freq','les_t2_145', 'les_t2_145_freq',
                      'les_t2_133', 'les_t2_133_freq', 'les_t2_21', 'les_t2_21_freq',
                      'les_t2_140', 'les_t2_140_freq', 'les_t2_131', 'les_t2_131_freq',
                      'les_t2_117', 'les_t2_117_freq', 'les_t2_139', 'les_t2_139_freq')],
-                     rise_les_t3_df[, c('rise_id', 'les_t3_44', 'les_t3_44_freq',
+                     rise_les_t3_df[, c('rise_id', 'les_t3_end_date', 'les_t3_44', 'les_t3_44_freq',
                      'les_t3_137', 'les_t3_137_freq', 'les_t3_138', 'les_t3_138_freq',
                      'les_t3_141', 'les_t3_141_freq', 'les_t3_17', 'les_t3_17_freq',
                      'les_t3_114', 'les_t3_114_freq', 'les_t3_115', 'les_t3_115_freq',
-                     'les_t3_120', 'les_t3_120_freq',
-                     'les_t3_45', 'les_t3_45_freq', 'les_t3_145', 'les_t3_145_freq',
+                     'les_t3_120', 'les_t3_120_freq', 'les_t3_145', 'les_t3_145_freq',
                      'les_t3_133', 'les_t3_133_freq', 'les_t3_21', 'les_t3_21_freq',
                      'les_t3_140', 'les_t3_140_freq', 'les_t3_131', 'les_t3_131_freq',
                      'les_t3_117', 'les_t3_117_freq', 'les_t3_139', 'les_t3_139_freq')]
                      )
 rise_les_df$subid <- rise_les_df$rise_id
 rise_les_df$rise_id <- NULL
+
+# Time 
+rise_les_df$les_t2_start_date <- as.Date(rise_les_df$les_t2_start_date)
+rise_les_df$les_t3_end_date <- as.Date(rise_les_df$les_t3_end_date)
+rise_les_df$years_t1_t3 <- as.numeric((rise_les_df$les_t3_end_date - rise_les_df$les_t2_start_date)/365)
 
 # Recode session
 rise_bdi_df$sesid <- recode(rise_bdi_df$redcap_event_name, 't1s2_b1_arm_1' = 1,
@@ -92,18 +95,7 @@ for (i in 1:nrow(rise_les_df)) {
     }
 }
 
-#5) Significant fight or argument with family member (including your child), close friend, or partner. 
-#les_t3_45/les_t3_45_freq
-for (i in 1:nrow(rise_les_df)) {
-    if (!is.na(rise_les_df[i, 'les_t2_45']) & is.na(rise_les_df[i, 'les_t2_45_freq'])) {
-        rise_les_df[i, 'les_t2_45_freq'] <- 0
-    }
-    if (!is.na(rise_les_df[i, 'les_t3_45']) & is.na(rise_les_df[i, 'les_t3_45_freq'])) {
-        rise_les_df[i, 'les_t3_45_freq'] <- 0
-    }
-}
-
-#6) You experienced a natural disaster (e.g., earthquake, flood) or human threat (e.g., bombing). 
+#5) You experienced a natural disaster (e.g., earthquake, flood) or human threat (e.g., bombing). 
 #les_t3_145/les_t3_145_freq
 for (i in 1:nrow(rise_les_df)) {
     if (!is.na(rise_les_df[i, 'les_t2_145']) & is.na(rise_les_df[i, 'les_t2_145_freq'])) {
@@ -114,7 +106,7 @@ for (i in 1:nrow(rise_les_df)) {
     }
 }
 
-#7) Serious illness, accident, or injury. 
+#6) Serious illness, accident, or injury. 
 #les_t3_133/les_t3_133_freq
 for (i in 1:nrow(rise_les_df)) {
     if (!is.na(rise_les_df[i, 'les_t2_133']) & is.na(rise_les_df[i, 'les_t2_133_freq'])) {
@@ -125,7 +117,7 @@ for (i in 1:nrow(rise_les_df)) {
     }
 }
 
-#8) Exposed to negative, toxic or dangerous situations at work or school.  
+#7) Exposed to negative, toxic or dangerous situations at work or school.  
 #les_t3_21/les_t3_21_freq
 for (i in 1:nrow(rise_les_df)) {
     if (!is.na(rise_les_df[i, 'les_t2_21']) & is.na(rise_les_df[i, 'les_t2_21_freq'])) {
@@ -147,15 +139,17 @@ table(rise_les_df$threatening_original_2)
 # 124  16   5   7   1   1   1 
 #... that's not good. Will need to change definition
 
-rise_les_df$threatening_2 <- rowSums(rise_les_df[, c('les_t2_44_freq', 'les_t2_137_freq',
-                                   'les_t2_138_freq', 'les_t2_141_freq', 'les_t3_44_freq', 
+rise_les_df$threatening_2 <- rowSums(rise_les_df[, c('les_t2_44_freq', 
+                                   'les_t2_137_freq', 'les_t2_138_freq', 
+                                   'les_t2_141_freq', 'les_t3_44_freq', 
                                    'les_t3_137_freq', 'les_t3_138_freq', 
-                                   'les_t3_141_freq',
-                                   'les_t2_45_freq', 'les_t2_145_freq',
-                                   'les_t2_133_freq', 'les_t2_21_freq', 'les_t3_45_freq', 
+                                   'les_t3_141_freq', 'les_t2_145_freq',
+                                   'les_t2_133_freq', 'les_t2_21_freq', 
                                    'les_t3_145_freq', 'les_t3_133_freq', 
                                    'les_t3_21_freq')])
 table(rise_les_df$threatening_2)
+
+rise_les_df$threatening_2_rate <- rise_les_df$threatening_2/rise_les_df$years_t1_t3
 
 # Unstable
 #1) You or your immediate family did not have enough money for one or more necessities (i.e., health care, food, housing, heat, electricity, or necessary clothing)
@@ -268,8 +262,11 @@ table(rise_les_df$unstable_2)
 #  0  1  2  3  4  8 10 11 21 25 51 
 # 97 26 13  8  4  1  2  1  1  1  1 
 
-rise_les_df <- rise_les_df[, c('subid', 'threatening_original_2', 'threatening_2',
-                                 'unstable_original_2', 'unstable_2')]
+rise_les_df$unstable_2_rate <- rise_les_df$unstable_2/rise_les_df$years_t1_t3
+
+rise_les_df <- rise_les_df[, c('subid', 'years_t1_t3', 'threatening_original_2', 
+                               'threatening_2', 'threatening_2_rate', 
+                               'unstable_original_2', 'unstable_2', 'unstable_2_rate')]
 
 # Depression
 rise_bdi_df$bdi_sum <- rowSums(rise_bdi_df[, paste0('bdi_', 1:21)])
@@ -295,27 +292,30 @@ crest_bdi_df <- read.csv(paste0(basedir, 'ProjectCREST-15BDI_DATA_2026-03-20_105
 crest_les_t2_df <- read.csv(paste0(basedir, 'ProjectCREST-122LEST2_DATA_2026-03-20_1057.csv'))
 crest_les_t3_df <- read.csv(paste0(basedir, 'ProjectCREST-123LEST3_DATA_2026-03-20_1057.csv'))
 
-crest_les_df <- merge(crest_les_t2_df[, c('crest_id', 'les_t2_44', 'les_t2_44_freq',
+crest_les_df <- merge(crest_les_t2_df[, c('crest_id', 'les_t2_start_date', 'les_t2_44', 'les_t2_44_freq',
                      'les_t2_137', 'les_t2_137_freq', 'les_t2_138', 'les_t2_138_freq',
                      'les_t2_141', 'les_t2_141_freq', 'les_t2_17', 'les_t2_17_freq',
                      'les_t2_114', 'les_t2_114_freq', 'les_t2_115', 'les_t2_115_freq',
-                     'les_t2_120', 'les_t2_120_freq',
-                     'les_t2_45', 'les_t2_45_freq', 'les_t2_145', 'les_t2_145_freq',
+                     'les_t2_120', 'les_t2_120_freq','les_t2_145', 'les_t2_145_freq',
                      'les_t2_133', 'les_t2_133_freq', 'les_t2_21', 'les_t2_21_freq',
                      'les_t2_140', 'les_t2_140_freq', 'les_t2_131', 'les_t2_131_freq',
                      'les_t2_117', 'les_t2_117_freq', 'les_t2_139', 'les_t2_139_freq')],
-                     crest_les_t3_df[, c('crest_id', 'les_t3_44', 'les_t3_44_freq',
+                     crest_les_t3_df[, c('crest_id', 'les_t3_end_date', 'les_t3_44', 'les_t3_44_freq',
                      'les_t3_137', 'les_t3_137_freq', 'les_t3_138', 'les_t3_138_freq',
                      'les_t3_141', 'les_t3_141_freq', 'les_t3_17', 'les_t3_17_freq',
                      'les_t3_114', 'les_t3_114_freq', 'les_t3_115', 'les_t3_115_freq',
-                     'les_t3_120', 'les_t3_120_freq',
-                     'les_t3_45', 'les_t3_45_freq', 'les_t3_145', 'les_t3_145_freq',
+                     'les_t3_120', 'les_t3_120_freq', 'les_t3_145', 'les_t3_145_freq',
                      'les_t3_133', 'les_t3_133_freq', 'les_t3_21', 'les_t3_21_freq',
                      'les_t3_140', 'les_t3_140_freq', 'les_t3_131', 'les_t3_131_freq',
                      'les_t3_117', 'les_t3_117_freq', 'les_t3_139', 'les_t3_139_freq')]
                      )
 crest_les_df$subid <- crest_les_df$crest_id
 crest_les_df$crest_id <- NULL
+
+# Time 
+crest_les_df$les_t2_start_date <- as.Date(crest_les_df$les_t2_start_date)
+crest_les_df$les_t3_end_date <- as.Date(crest_les_df$les_t3_end_date)
+crest_les_df$years_t1_t3 <- as.numeric((crest_les_df$les_t3_end_date - crest_les_df$les_t2_start_date)/365)
 
 # Recode session
 crest_bdi_df$sesid <- recode(crest_bdi_df$redcap_event_name, 't1_b2_arm_1' = 1,
@@ -368,18 +368,7 @@ for (i in 1:nrow(crest_les_df)) {
     }
 }
 
-#5) Significant fight or argument with family member (including your child), close friend, or partner. 
-#les_t3_45/les_t3_45_freq
-for (i in 1:nrow(crest_les_df)) {
-    if (!is.na(crest_les_df[i, 'les_t2_45']) & is.na(crest_les_df[i, 'les_t2_45_freq'])) {
-        crest_les_df[i, 'les_t2_45_freq'] <- 0
-    }
-    if (!is.na(crest_les_df[i, 'les_t3_45']) & is.na(crest_les_df[i, 'les_t3_45_freq'])) {
-        crest_les_df[i, 'les_t3_45_freq'] <- 0
-    }
-}
-
-#6) You experienced a natural disaster (e.g., earthquake, flood) or human threat (e.g., bombing). 
+#5) You experienced a natural disaster (e.g., earthquake, flood) or human threat (e.g., bombing). 
 #les_t3_145/les_t3_145_freq
 for (i in 1:nrow(crest_les_df)) {
     if (!is.na(crest_les_df[i, 'les_t2_145']) & is.na(crest_les_df[i, 'les_t2_145_freq'])) {
@@ -390,7 +379,7 @@ for (i in 1:nrow(crest_les_df)) {
     }
 }
 
-#7) Serious illness, accident, or injury. 
+#6) Serious illness, accident, or injury. 
 #les_t3_133/les_t3_133_freq
 for (i in 1:nrow(crest_les_df)) {
     if (!is.na(crest_les_df[i, 'les_t2_133']) & is.na(crest_les_df[i, 'les_t2_133_freq'])) {
@@ -401,7 +390,7 @@ for (i in 1:nrow(crest_les_df)) {
     }
 }
 
-#8) Exposed to negative, toxic or dangerous situations at work or school.  
+#7) Exposed to negative, toxic or dangerous situations at work or school.  
 #les_t3_21/les_t3_21_freq
 for (i in 1:nrow(crest_les_df)) {
     if (!is.na(crest_les_df[i, 'les_t2_21']) & is.na(crest_les_df[i, 'les_t2_21_freq'])) {
@@ -420,15 +409,17 @@ crest_les_df$threatening_original_2 <- rowSums(crest_les_df[, c('les_t2_44_freq'
                                    'les_t3_141_freq')])
 table(crest_les_df$threatening_original_2)
 
-crest_les_df$threatening_2 <- rowSums(crest_les_df[, c('les_t2_44_freq', 'les_t2_137_freq',
-                                   'les_t2_138_freq', 'les_t2_141_freq', 'les_t3_44_freq', 
+crest_les_df$threatening_2 <- rowSums(crest_les_df[, c('les_t2_44_freq', 
+                                   'les_t2_137_freq', 'les_t2_138_freq', 
+                                   'les_t2_141_freq', 'les_t3_44_freq', 
                                    'les_t3_137_freq', 'les_t3_138_freq', 
-                                   'les_t3_141_freq',
-                                   'les_t2_45_freq', 'les_t2_145_freq',
-                                   'les_t2_133_freq', 'les_t2_21_freq', 'les_t3_45_freq', 
+                                   'les_t3_141_freq', 'les_t2_145_freq',
+                                   'les_t2_133_freq', 'les_t2_21_freq', 
                                    'les_t3_145_freq', 'les_t3_133_freq', 
                                    'les_t3_21_freq')])
 table(crest_les_df$threatening_2)
+
+crest_les_df$threatening_2_rate <- crest_les_df$threatening_2/crest_les_df$years_t1_t3
 
 # Unstable
 #1) You or your immediate family did not have enough money for one or more necessities (i.e., health care, food, housing, heat, electricity, or necessary clothing)
@@ -536,8 +527,11 @@ crest_les_df$unstable_2 <- rowSums(crest_les_df[, c('les_t2_17_freq', 'les_t2_11
                                    'les_t3_140_freq')])
 table(crest_les_df$unstable_2)
 
-crest_les_df <- crest_les_df[, c('subid', 'threatening_original_2', 'threatening_2',
-                                 'unstable_original_2', 'unstable_2')]
+crest_les_df$unstable_2_rate <- crest_les_df$unstable_2/crest_les_df$years_t1_t3
+
+crest_les_df <- crest_les_df[, c('subid', 'years_t1_t3', 'threatening_original_2', 
+                                 'threatening_2', 'threatening_2_rate', 
+                                 'unstable_original_2', 'unstable_2', 'unstable_2_rate')]
 
 # Depression
 crest_bdi_df$bdi_sum <- rowSums(crest_bdi_df[, paste0('bdi_', 1:21)])
