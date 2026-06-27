@@ -1,7 +1,7 @@
 ### Merge all data types for final sample
 ###
 ### Ellyn Butler
-### March 26, 2026 - May 10, 2026
+### March 26, 2026 - June 1, 2026
 
 library(dplyr)
 
@@ -46,7 +46,8 @@ final_df <- merge(final_df, net_df2, by=c('subid'), all=TRUE)
 final_df <- final_df[, c('subid', 'Sex', 'Race', 'Ethnicity', 'Familys_Gross_Total_Income', 
                          'age_bdi', 'age_les', 'age_mri', 'age_bdi_minus_age_mri', 
                          'age_mri_minus_age_les', 'age_bdi_minus_age_les',
-                         'threatening_2', 'unstable_2', 'bdi_sum_1', 'bdi_sum_2',
+                         'threatening_2', 'threatening_2_rate', 'unstable_2', 
+                         'unstable_2_rate', 'bdi_sum_1', 'bdi_sum_2',
                          'exp_salienceb_pos_1', 'FC_pers_salienceb_pos_1',
                          'exp_dorsalattentionb_pos_1', 'FC_pers_dorsalattentionb_pos_1',
                          'exp_salienceb_pos_2', 'FC_pers_salienceb_pos_2',

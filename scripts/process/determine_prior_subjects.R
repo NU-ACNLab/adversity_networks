@@ -5,7 +5,7 @@
 ### have the second session available
 ### 
 ### Ellyn Butler
-### March 19, 2026 - March 23, 2026
+### March 19, 2026 - June 1, 2026
 
 set.seed(2000)
 
