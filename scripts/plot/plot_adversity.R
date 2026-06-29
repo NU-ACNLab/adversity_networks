@@ -3,58 +3,97 @@
 ### Ellyn Butler
 ### June 27, 2026
 
-# advence rates
-demo_df <- read.csv('~/Northwestern/projects/adversity_networks/data/processed/demographic/demographic_2026-03-31.csv')
-adv_df <- read.csv('~/Documents/Northwestern/studies/mwmh/data/processed/advence/advence_2022-10-06.csv')
+# Load packages
+library(ggpubr)
+library(ggplot2)
 
-adv_df <- merge(adv_df, demo_df)
+# Load data
+comb_df <- read.csv('~/Documents/Northwestern/projects/adversity_networks/data/processed/combined/combined_data_2026-06-01.csv')
+comb_df <- comb_df[which(!is.na(comb_df$exp_salienceb_pos_2)),]
+adv_df <- read.csv('~/Documents/Northwestern/projects/adversity_networks/data/processed/clinical/adversity_2026-06-27.csv')
+
+
+adv_df <- merge(adv_df, comb_df)
 nf <- nrow(adv_df[adv_df$Sex == 'Female', ])
 nm <- nrow(adv_df[adv_df$Sex == 'Male', ])
 
-threat_df <- data.frame(Variable=paste0('ETV', 1:7),
-                      threat=c('Family Hurt or Killed', 'Friends Hurt or Killed',
-                        'Saw Attacked Knife', 'Saw Shot', 'Shoved Kicked Punched',
-                        'Attacked Knife', 'Shot At'),
+threat_df <- data.frame(Threat=rep(c('Close other accident/violence', 'Witnessed accident/violence', 'Verbal threats of violence',
+                               'Experienced accident/violence', 'Natural disaster/human threat', 'Illness/accident/injury',
+                               'Negative/toxic/dangerous'), 2),
                       Sex=c(rep('Female', 7), rep('Male', 7)),
-                      Sum=c(sum(adv_df[adv_df$female == 1, 'etv1_pastyear'])/nf,
-                            sum(adv_df[adv_df$female == 1, 'etv2_pastyear'])/nf,
-                            sum(adv_df[adv_df$female == 1, 'etv3_pastyear'])/nf,
-                            sum(adv_df[adv_df$female == 1, 'etv4_pastyear'])/nf,
-                            sum(adv_df[adv_df$female == 1, 'etv5_pastyear'])/nf,
-                            sum(adv_df[adv_df$female == 1, 'etv6_pastyear'])/nf,
-                            sum(adv_df[adv_df$female == 1, 'etv7_pastyear'])/nf,
-                            sum(adv_df[adv_df$female == 0, 'etv1_pastyear'])/nm,
-                            sum(adv_df[adv_df$female == 0, 'etv2_pastyear'])/nm,
-                            sum(adv_df[adv_df$female == 0, 'etv3_pastyear'])/nm,
-                            sum(adv_df[adv_df$female == 0, 'etv4_pastyear'])/nm,
-                            sum(adv_df[adv_df$female == 0, 'etv5_pastyear'])/nm,
-                            sum(adv_df[adv_df$female == 0, 'etv6_pastyear'])/nm,
-                            sum(adv_df[adv_df$female == 0, 'etv7_pastyear'])/nm)
+                      Average=c(sum(adv_df[adv_df$Sex == 'Female', 'family_member_rate'])/nf,
+                            sum(adv_df[adv_df$Sex == 'Female', 'witness_rate'])/nf,
+                            sum(adv_df[adv_df$Sex == 'Female', 'verbal_rate'])/nf,
+                            sum(adv_df[adv_df$Sex == 'Female', 'direct_rate'])/nf,
+                            sum(adv_df[adv_df$Sex == 'Female', 'mass_rate'])/nf,
+                            sum(adv_df[adv_df$Sex == 'Female', 'serious_rate'])/nf,
+                            sum(adv_df[adv_df$Sex == 'Female', 'dangerous_rate'])/nf,
+                            sum(adv_df[adv_df$Sex == 'Male', 'family_member_rate'])/nm,
+                            sum(adv_df[adv_df$Sex == 'Male', 'witness_rate'])/nm,
+                            sum(adv_df[adv_df$Sex == 'Male', 'verbal_rate'])/nm,
+                            sum(adv_df[adv_df$Sex == 'Male', 'direct_rate'])/nm,
+                            sum(adv_df[adv_df$Sex == 'Male', 'mass_rate'])/nm,
+                            sum(adv_df[adv_df$Sex == 'Male', 'serious_rate'])/nm,
+                            sum(adv_df[adv_df$Sex == 'Male', 'dangerous_rate'])/nm)
                       )
 
 
-threat_df$threat <- ordered(pastyear_df$threat, c('Family Hurt or Killed', 'Friends Hurt or Killed',
-  'Saw Attacked Knife', 'Saw Shot', 'Attacked Knife', 'Shot At', 'Shoved Kicked Punched'))
+threat_df$Threat <- ordered(threat_df$Threat, c('Witnessed accident/violence', 'Close other accident/violence', 
+                      'Experienced accident/violence', 'Verbal threats of violence',
+                      'Natural disaster/human threat', 'Illness/accident/injury', 'Negative/toxic/dangerous'))
 
-threat_plot <- ggplot(pastyear_df, aes(x=advence, y=Sum, fill=advence)) +
+threat_plot <- ggplot(threat_df, aes(x=Threat, y=Average, fill=Threat)) +
   facet_grid(. ~ Sex) + theme_linedraw() + geom_bar(stat='identity', position='dodge') +
   theme(legend.position='none', axis.title.x=element_blank(), axis.title.y=element_text(size=7),
 		panel.spacing=unit(.1, 'lines'), axis.text.y=element_text(size=6),
-    axis.text.x = element_text(angle=45, hjust=1, size=6)) +
-  ylab('Average number of times in the past year') +
+    axis.text.x = element_text(angle=55, hjust=1, size=6)) +
+  ylab('Average rate per year for ~ the past year') +
   scale_fill_manual(values=c('deepskyblue3', 'steelblue1', 'springgreen3',
-  'palegreen1', 'pink1', 'advetred1', 'firebrick2'))
+  'palegreen1', 'pink1', 'violetred1', 'firebrick2'))
 
-instability_plot <- ggplot(pastyear_df, aes(x=advence, y=Sum, fill=advence)) +
+unstable_df <- data.frame(Unstable=rep(c('Not enough $ for essentials', 'Disruptive home', 'Home not available',
+                              'Property theft/damage', 'Negative conditions disrupt sleep', 'Moved', 
+                              'Home broken into', 'Car damaged/stolen'), 2),
+                      Sex=c(rep('Female', 8), rep('Male', 8)),
+                      Average=c(sum(adv_df[adv_df$Sex == 'Female', 'lack_money_rate'])/nf,
+                            sum(adv_df[adv_df$Sex == 'Female', 'disruptive_living_rate'])/nf,
+                            sum(adv_df[adv_df$Sex == 'Female', 'unforeseen_housing_rate'])/nf,
+                            sum(adv_df[adv_df$Sex == 'Female', 'stolen_rate'])/nf,
+                            sum(adv_df[adv_df$Sex == 'Female', 'sleep_disrupted_rate'])/nf,
+                            sum(adv_df[adv_df$Sex == 'Female', 'moved_rate'])/nf,
+                            sum(adv_df[adv_df$Sex == 'Female', 'home_broken_rate'])/nf,
+                            sum(adv_df[adv_df$Sex == 'Female', 'car_broken_rate'])/nf,
+                            sum(adv_df[adv_df$Sex == 'Male', 'lack_money_rate'])/nm,
+                            sum(adv_df[adv_df$Sex == 'Male', 'disruptive_living_rate'])/nm,
+                            sum(adv_df[adv_df$Sex == 'Male', 'unforeseen_housing_rate'])/nm,
+                            sum(adv_df[adv_df$Sex == 'Male', 'sleep_disrupted_rate'])/nm,
+                            sum(adv_df[adv_df$Sex == 'Male', 'mass_rate'])/nm,
+                            sum(adv_df[adv_df$Sex == 'Male', 'moved_rate'])/nm,
+                            sum(adv_df[adv_df$Sex == 'Male', 'home_broken_rate'])/nm,
+                            sum(adv_df[adv_df$Sex == 'Male', 'car_broken_rate'])/nm)
+                      )
+
+
+unstable_df$Unstable <- ordered(unstable_df$Unstable, c('Disruptive home', 'Negative conditions disrupt sleep',
+                                'Home not available', 'Moved', 'Not enough $ for essentials', 'Property theft/damage', 
+                                'Home broken into', 'Car damaged/stolen'))
+
+unstable_plot <- ggplot(unstable_df, aes(x=Unstable, y=Average, fill=Unstable)) +
   facet_grid(. ~ Sex) + theme_linedraw() + geom_bar(stat='identity', position='dodge') +
   theme(legend.position='none', axis.title.x=element_blank(), axis.title.y=element_text(size=7),
 		panel.spacing=unit(.1, 'lines'), axis.text.y=element_text(size=6),
-    axis.text.x = element_text(angle=45, hjust=1, size=6)) +
-  ylab('Average number of times in the past year') +
+    axis.text.x = element_text(angle=55, hjust=1, size=6)) +
+  ylab('Average rate per year for ~ the past year') +
   scale_fill_manual(values=c('deepskyblue3', 'steelblue1', 'springgreen3',
-  'palegreen1', 'pink1', 'advetred1', 'firebrick2'))
+  'palegreen1', 'pink1', 'violetred1', 'firebrick2', 'red4'))
+
+adversity_plot <- ggarrange(
+  threat_plot, unstable_plot, 
+  nrow = 2, ncol = 1, #common.legend = TRUE, legend = 'bottom',
+  labels = c('A', 'B')
+  ) 
 
 # Export
-jpeg('~/Documents/Northwestern/projects/adversity_networks/plots/pastyear_advence_ses-2.jpg', res=300, units='mm', width=120, height=150)
+jpeg('~/Documents/Northwestern/projects/adversity_networks/plots/adversity_plot.jpg', res=300, units='mm', width=180, height=180)
 adversity_plot
 dev.off() 
