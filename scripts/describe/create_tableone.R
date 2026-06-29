@@ -15,6 +15,17 @@ df$Age <- df$age_mri
 
 df$Depression <- df$bdi_sum_2
 
+df[,'Family\'s Gross Total Income'] <- ordered(df$Familys_Gross_Total_Income, c('$20,000 - $34,999',
+                                    '$35,000 - $49,999', '$50,000 - $74,999', '$75,000 - $99,999', 
+                                    '$100,000 - $149,999', '$150,000 - $199,999', '$200,000 - $249,999', 
+                                    '$250,000 - $299,999', '$300,000 and higher'))
 
-table1(~ Age + Race + Ethnicity + Familys_Gross_Total_Income +
-        Depression | Sex, data=df)
+df <- df |>
+  mutate(Race = case_match(
+    Race,
+    'Other  {demo_race_other}' ~ 'Other',
+    .default = Race
+  ))
+
+table1(~ Age + Race + Ethnicity + `Family\'s Gross Total Income` +
+        Depression | Sex, data = df)
