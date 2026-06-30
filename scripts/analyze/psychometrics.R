@@ -21,7 +21,7 @@ df <- merge(df, comb_df)
 bdi_fa1 <- fa(df[, paste0('bdi_', 1:21, '_2')], nfactors = 1)
 bdi_fa2 <- fa(df[, paste0('bdi_', 1:21, '_2')], nfactors = 2)
 
-# Extract chi-square and df from each model
+# Get chi-square and df from each model
 chi1 <- bdi_fa1$STATISTIC
 df1  <- bdi_fa1$dof
 
@@ -52,7 +52,7 @@ bdi_scree <- ggplot(eigen_df1, aes(x=compnum, y=eigen)) +
     geom_line(stat='identity') + geom_point() +  theme_minimal() +
     xlab('Component Number') + ylab('Eigenvalues of Components') +
     scale_y_continuous(limits=c(0, 10)) + ggtitle('BDI') +
-    theme(plot.title = element_text(size=12), axis.title = element_text(size=10),
-      axis.text = element_text(size=6)) #really 1 factor
+    theme(plot.title = element_text(size = 12), axis.title = element_text(size = 10),
+      axis.text = element_text(size = 6)) #really 1 factor
 
     # Successive eigen values: 6.998, 1.994, 1.372, 1.232, 1.058
