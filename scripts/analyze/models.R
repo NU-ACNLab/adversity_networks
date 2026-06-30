@@ -1,7 +1,7 @@
 ### This code focuses on session 2 for the analyses
 ###
 ### Ellyn Butler
-### March 26, 2026 - June 1, 2026
+### March 26, 2026 - July 1, 2026
 
 set.seed(2000)
 
@@ -14,6 +14,8 @@ library(ggpubr)
 library(sjmisc)
 library(sjlabelled)
 library(mlr)
+library(BayesFactor)
+library(mediation)
 
 #library(lmerTest) #confint
 
