@@ -5,17 +5,17 @@
 
 set.seed(2000)
 
-library(reshape2)
-library(MASS)
-library(dplyr)
-library(sjPlot)
-library(ggplot2)
-library(ggpubr)
-library(sjmisc)
-library(sjlabelled)
-library(mlr)
-library(BayesFactor)
-library(mediation)
+library(reshape2) # v1.4.5
+library(MASS) # v7.3-65
+library(dplyr) # v1.1.4
+library(sjPlot) # v 2.9.0
+library(ggplot2) # v4.0.3
+library(ggpubr) # v0.6.2
+library(sjmisc) # v2.8.11
+library(sjlabelled) # v1.2.0
+library(mlr) # v2.19.3
+library(BayesFactor) # v0.9.12-4.8
+library(mediation) # v4.5.1
 
 #library(lmerTest) #confint
 
@@ -84,7 +84,9 @@ df[, vars] <- scale(df[, vars])
 # and sex on depression (two different models)
 # Base
 threat_dep_mod <- lm(bdi_sum_2 ~ Sex*threatening_2_rate, data = df) # Hypothesis 1
+lmBF(bdi_sum_2 ~ threatening_2_rate, data = df[df$Sex == 'Female',]) #BF = 0.8701123 -> data more likely under alternative
 unstable_dep_mod <- lm(bdi_sum_2 ~ Sex*unstable_2_rate, data = df) # Hypothesis 2
+lmBF(bdi_sum_2 ~ unstable_2_rate, data = df[df$Sex == 'Male',]) #BF = 0.2296187 -> data more likely under alternative... this is suspect, especially in comparison to prior test
 
 # Covariates: Outcome at time 1
 threat_dep_mod1 <- lm(bdi_sum_2 ~ Sex*threatening_2_rate + bdi_sum_1, data = df)
@@ -115,9 +117,13 @@ cor.test(df[df$Sex == 'Male', 'unstable_2_rate'], df[df$Sex == 'Male', 'bdi_sum_
 threat_salexp_mod <- lm(exp_salienceb_pos_2 ~ Sex*threatening_2_rate, data = df)
 threat_salFC_mod <- lm(FC_pers_salienceb_pos_2 ~ Sex*threatening_2_rate, data = df)
 threat_dorexp_mod <- lm(exp_dorsalattentionb_pos_2 ~ Sex*threatening_2_rate, data = df) # Hypothesis 3a
+lmBF(exp_dorsalattentionb_pos_2 ~ threatening_2_rate, data = df[df$Sex == 'Female',]) # BF = 0.505698, alternative
 threat_dorFC_mod <- lm(FC_pers_dorsalattentionb_pos_2 ~ Sex*threatening_2_rate, data = df) # Hypothesis 3b
+lmBF(FC_pers_dorsalattentionb_pos_2 ~ threatening_2_rate, data = df[df$Sex == 'Female',]) # BF = 0.3326407, alternative
 unstable_salexp_mod <- lm(exp_salienceb_pos_2 ~ Sex*unstable_2_rate, data = df) # Hypothesis 4a
+lmBF(exp_salienceb_pos_2 ~ unstable_2_rate, data = df[df$Sex == 'Male',]) # BF = 0.2132474
 unstable_salFC_mod <- lm(FC_pers_salienceb_pos_2 ~ Sex*unstable_2_rate, data = df) # Hypothesis 4b
+lmBF(FC_pers_salienceb_pos_2 ~ unstable_2_rate, data = df[df$Sex == 'Male',]) # BF = 0.2785743
 unstable_dorexp_mod <- lm(exp_dorsalattentionb_pos_2 ~ Sex*unstable_2_rate, data = df)
 unstable_dorFC_mod <- lm(FC_pers_dorsalattentionb_pos_2 ~ Sex*unstable_2_rate, data = df)
 
@@ -166,9 +172,13 @@ tab_model(unstable_dorFC_mod, unstable_dorFC_mod1, unstable_dorFC_mod2, unstable
 
 # Base
 salexp_dep_mod <- lm(bdi_sum_2 ~ Sex*exp_salienceb_pos_2, data = df)
+lmBF(bdi_sum_2 ~ exp_salienceb_pos_2, data = df[df$Sex == 'Male',]) # BF = 0.2094714
 salFC_dep_mod <- lm(bdi_sum_2 ~ Sex*FC_pers_salienceb_pos_2, data = df)
+lmBF(bdi_sum_2 ~ FC_pers_salienceb_pos_2, data = df[df$Sex == 'Male',]) # BF = 0.2699593
 dorexp_dep_mod <- lm(bdi_sum_2 ~ Sex*exp_dorsalattentionb_pos_2, data = df)
+lmBF(bdi_sum_2 ~ exp_dorsalattentionb_pos_2, data = df[df$Sex == 'Female',]) # BF = 0.5743002
 dorFC_dep_mod <- lm(bdi_sum_2 ~ Sex*FC_pers_dorsalattentionb_pos_2, data = df)
+lmBF(bdi_sum_2 ~ FC_pers_dorsalattentionb_pos_2, data = df[df$Sex == 'Female',]) # BF = 0.1824955
 
 # Covariates: Outcome at time 1
 salexp_dep_mod1 <- lm(bdi_sum_2 ~ Sex*exp_salienceb_pos_2 + bdi_sum_1, data = df)
@@ -201,10 +211,29 @@ tab_model(dorFC_dep_mod, dorFC_dep_mod1, dorFC_dep_mod2, dorFC_dep_mod3) #
 # Base 
 threat_salexp_dep_mod <- lm(bdi_sum_2 ~ Sex*threatening_2_rate + exp_salienceb_pos_2 + Sex:exp_salienceb_pos_2, data = df)
 threat_salFC_dep_mod <- lm(bdi_sum_2 ~ Sex*threatening_2_rate + FC_pers_salienceb_pos_2 + Sex:FC_pers_salienceb_pos_2, data = df)
+
 threat_dorexp_dep_mod <- lm(bdi_sum_2 ~ Sex*threatening_2_rate + exp_dorsalattentionb_pos_2 + Sex:exp_dorsalattentionb_pos_2, data = df)
+threat_dorexp_dep_F_mod <- lm(bdi_sum_2 ~ threatening_2_rate + exp_dorsalattentionb_pos_2, data = df[df$Sex == 'Female',])
+threat_dorexp_dep_bf <- lmBF(bdi_sum_2 ~ threatening_2_rate + exp_dorsalattentionb_pos_2, data = df[df$Sex == 'Female',])
+threat_dep_bf <- lmBF(bdi_sum_2 ~ threatening_2_rate, data = df[df$Sex == 'Female',])
+threat_dorexp_dep_bf/threat_dep_bf # BF = 1.202443... null
+
 threat_dorFC_dep_mod <- lm(bdi_sum_2 ~ Sex*threatening_2_rate + FC_pers_dorsalattentionb_pos_2 + Sex:FC_pers_dorsalattentionb_pos_2, data = df)
+threat_dorFC_dep_F_mod <- lm(bdi_sum_2 ~ threatening_2_rate + FC_pers_dorsalattentionb_pos_2, data = df[df$Sex == 'Female',])
+threat_dorFC_dep_bf <- lmBF(bdi_sum_2 ~ threatening_2_rate + FC_pers_dorsalattentionb_pos_2, data = df[df$Sex == 'Female',])
+threat_dorFC_dep_bf/threat_dep_bf # BF = 0.2687174 alternative
+
 unstable_salexp_dep_mod <- lm(bdi_sum_2 ~ Sex*unstable_2_rate + exp_salienceb_pos_2 + Sex:exp_salienceb_pos_2, data = df)
+unstable_salexp_dep_M_mod <- lm(bdi_sum_2 ~ unstable_2_rate + exp_salienceb_pos_2, data = df[df$Sex == 'Male',])
+unstable_salexp_dep_bf <- lmBF(bdi_sum_2 ~ unstable_2_rate + exp_salienceb_pos_2, data = df[df$Sex == 'Male',])
+unstable_dep_bf <- lmBF(bdi_sum_2 ~ unstable_2_rate, data = df[df$Sex == 'Male',])
+unstable_salexp_dep_bf/unstable_dep_bf # BF = 0.3095988 alternative
+
 unstable_salFC_dep_mod <- lm(bdi_sum_2 ~ Sex*unstable_2_rate + FC_pers_salienceb_pos_2 + Sex:FC_pers_salienceb_pos_2, data = df)
+unstable_salFC_dep_M_mod <- lm(bdi_sum_2 ~ unstable_2_rate + FC_pers_salienceb_pos_2 , data = df[df$Sex == 'Male',])
+unstable_salFC_dep_bf <- lmBF(bdi_sum_2 ~ unstable_2_rate + FC_pers_salienceb_pos_2 , data = df[df$Sex == 'Male',])
+unstable_salFC_dep_bf/unstable_dep_bf # BF = 0.3856793 alternative
+
 unstable_dorexp_dep_mod <- lm(bdi_sum_2 ~ Sex*unstable_2_rate + exp_dorsalattentionb_pos_2 + Sex:exp_dorsalattentionb_pos_2, data = df)
 unstable_dorFC_dep_mod <- lm(bdi_sum_2 ~ Sex*unstable_2_rate + FC_pers_dorsalattentionb_pos_2 + Sex:FC_pers_dorsalattentionb_pos_2, data = df)
 
